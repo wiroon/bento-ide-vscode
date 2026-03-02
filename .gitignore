@@ -1,0 +1,6 @@
+# Public repo — ONLY README and media allowed
+# Everything else is blocked by default
+
+# OS
+.DS_Store
+Thumbs.db
