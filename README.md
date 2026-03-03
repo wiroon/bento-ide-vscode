@@ -14,11 +14,6 @@
 
 | Metric | Count |
 |--------|-------|
-| Custom Block Definitions | **102** |
-| Code Generators | **102** |
-| Toolbox Categories | **17** (10 custom + 7 standard Blockly) |
-| Help/API Reference Modules | **32** (24 API/help modules + 8 tutorials) |
-| Autocomplete Entries | **109** |
 | Example Programs | **163** (50 inline + 113 file-based) |
 | Example Domains | **14** (Agriculture, Connectivity, Dashboard, Display, DSP, Factory, Game, GPIO, IoT, Joystick, Security, Sensor, System, UI) |
 | Python→Blocks Converter | **113+ patterns** (AST-based reverse compiler) |
@@ -48,17 +43,16 @@ The PSoC Edge E84 is a **dual-core Arm** platform by **Infineon** designed for E
 | Component | Description | Board |
 |-----------|-------------|-------|
 | **BMI270** | 6-axis IMU (Accelerometer + Gyroscope) | Both |
+| **BMM350** | 3-axis Magnetometer (I3C) | Both |
 | **DPS368** | Barometric Pressure + Temperature | AI Dev Kit |
 | **SHT40** | Humidity + Temperature | AI Dev Kit |
-| **BMM350** | 3-axis Magnetometer (I3C) | Eva Kit |
-| **CapSense** | Touch Buttons + Slider (I2C to PSoC 4000T) | Eva Kit |
+| **CapSense** | Touch Buttons + Slider | Eva Kit |
 | **Potentiometer** | Analog Input (SAR ADC) | Eva Kit |
-| **XENSIV Radar** | BGT60TR13C Presence Detection (via CM55 Secure IPC) | AI Dev Kit |
-| **CYW55513** | WiFi 5 + Bluetooth (cy_wcm/cy_mqtt) | Both |
+| **XENSIV Radar** | BGT60TR13C Presence Detection | AI Dev Kit |
+| **CYW55513** | WiFi 5 + Bluetooth | Both |
 | **OPTIGA Trust M** | Hardware Security (TRNG, AES, ECDSA, Certs, Device ID) | Both |
-| **ILI9341 LCD** | 320×240 TFT (LVGL on CM55) | Both |
-| **KitProg3** | USB-CDC debug/programming (UART P6_5/P6_7) | Both |
-| **USB Host** | HID Gamepad (Logitech F310 DirectInput) | Both |
+| **ILI9341 LCD** | 800×480 TFT | Both |
+| **USB Host** | HID Gamepad (Logitech F310 DirectInput Mode) | Both |
 
 ### Secure Inter-Processor Communication (Secure IPC)
 
@@ -70,28 +64,18 @@ CM33_NS (MicroPython)  <──Secure IPC Shared Memory──>  CM55 (FreeRTOS)
   OPTIGA Trust M                                     Radar Presence
   USB HID Joystick                                   USB Host Controller
 ```
-
-MicroPython runs on **CM33_NS** and communicates with **CM55** via Secure IPC for:
-- `lcd.console()` — Send text to LVGL display
-- `lcd.print()` — Legacy alias of `lcd.console()`
-- `sensors.push()` / `sensors.live_push()` — Stream sensor data to dashboard
-- `sensors.auto()` — Enable background auto-push to dashboard
-- `sensors.radar()` — Read radar presence/energy from CM55
-- `tesaiot.*` — OPTIGA Trust M operations via CM55
-- `joystick.*` — USB HID via CM55 USB Host
-
 ---
 
 ## Features
 
 ### Block Programming
-- **Google Blockly v11.2.1** (pinned) with custom **Zelos renderer** and **TESAIoT theme**
+- **Google Blockly v11.2.1** with custom **Zelos renderer** and **TESAIoT theme**
 - **17 block categories** with **102 custom blocks** covering 10 PSoC Edge modules
 - **Custom blocks** mapped 1:1 to PSoC Edge MicroPython C modules
 - **Quick Start templates**: Blink LED, Read Sensors, IoT Dashboard
 - **Auto-save** workspace to localStorage
 
-### Code Editor (CodeMirror 6)
+### Code Editor
 - **Python syntax highlighting** with One Dark theme
 - **Smart autocomplete** for **109 PSoC Edge MicroPython APIs**
   - Type `sensors.` to see all sensor functions
@@ -108,18 +92,19 @@ MicroPython runs on **CM33_NS** and communicates with **CM55** via Secure IPC fo
 - **Keyboard interrupt** (Ctrl+C / Stop button)
 
 ### Help & API Reference Panel
-- **32 modules/tutorials** documented with full API signatures, parameters, return types, examples, and board-specific workflow guidance
+- **35 modules/tutorials** documented with full API signatures, parameters, return types, examples, and board-specific workflow guidance
 - **Searchable** — filter by module name, function, or keyword
 - **Collapsible accordion** per module with chevron indicators
 - **Resizable** — drag left edge to resize (380px–700px), saved to localStorage
 - PSoC Edge Custom: sensors, gpio, lcd, wifi, mqtt, tesaiot, joystick, dsp, machine
 - Standard Library: time, json, asyncio, math, os, random, hashlib, re, struct, collections, binascii, sys, deflate, io, array
-- Tutorials: quick start, board differences, UI, sensors, joystick, LCD Console, system resources, stability rules
+- Tutorials: quick start, board differences, UI, sensors, joystick, LCD Console, system resources, stability rules, Example Explorer best practices, Web workflow, VSCode workflow
 
 ### Example Explorer (163 Examples)
 - **163 examples** across 14 domains, generated from the firmware example trees plus curated inline samples
 - **Difficulty levels**: 41 Beginner + 84 Intermediate + 38 Advanced
 - **Filter & search**: Filter by domain, difficulty, or keyword search
+- **Board-aware filtering**: Filter by AI Kit / Eval Kit / Both Boards using generated BSP tags
 - **Preview modal**: View blocks + Python code before loading
 - **113 file-based examples with blocks** mirrored from the firmware repositories, plus inline reference examples
 
@@ -129,17 +114,11 @@ MicroPython runs on **CM33_NS** and communicates with **CM55** via Secure IPC fo
 - **Round-trip editing**: Edit Python → switch to Blocks → changes preserved
 - **Graceful fallback**: Unrecognized code wrapped in `python_raw` blocks
 
-### Welcome Card
-- **Floating modal** with board architecture diagram
-- **Quick Start** template buttons (Blink LED, Read Sensors, IoT Dashboard)
-- **Quick Links**: Help/Tutorial, TESA, TESAIoT Platform, Developer Hub
-- **Reopenable** anytime via toolbar "Welcome" button
-
 ---
 
 ## Block Categories (102 Custom Blocks)
 
-### CM33_NS — MicroPython (Direct Hardware)
+### CM33 Core — MicroPython (Direct Hardware)
 
 | Category | Color | Blocks | MicroPython Module | Description |
 |----------|-------|--------|--------------------|-------------|
@@ -152,7 +131,7 @@ MicroPython runs on **CM33_NS** and communicates with **CM55** via Secure IPC fo
 | **Time** | Green | 4 | `time` | sleep, sleep_ms, ticks_ms, ticks_diff |
 | **Print** | Indigo | 2 | built-in | print text, print value |
 
-### CM55 — Edge AI + Display (Secure IPC)
+### CM55 Core — Edge AI + Display (Secure IPC)
 
 | Category | Color | Blocks | MicroPython Module | Description |
 |----------|-------|--------|--------------------|-------------|
